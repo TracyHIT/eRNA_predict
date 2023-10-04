@@ -34,8 +34,9 @@ RF_train_self_tuning_fuzz<- function(data_file,cell,Feature_index=3)
     out = list(one = train, two = test)
     return(out)
   }
-  train_index = (mysplit(k,len))$one
-  test_index = (mysplit(k,len))$two
+  t_mysplit<- mysplit(k,len)
+  train_index = t_mysplit$one
+  test_index = t_mysplit$two
   
   
 
