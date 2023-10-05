@@ -1,5 +1,5 @@
 #source activate tfcomb_env python3
-#numpy = 1.19.5
+#numpy = 1.19.5 #pip3 install -U numpy==1.19.5
 #pandas = 1.3.5
 #matplotlib = 3.1.0
 #tensorflow = 2.5.0
@@ -222,10 +222,27 @@ for fi in five_time:
               pred2[f2] = 1
               pred2[pred2<0.6] = 0
               sn_sp_acc_mcc_f11 = sn_sp_acc_mcc_f1(test_y,pred2,pos_label=1)
+
+              pred_prob = np.squeeze(res2,axis=-1)
+              labels= test_y
+              P_ind = []  # 正样本下标
+              F_ind = []
+              P_F = 0  # 正样本分数高于负样本的数量
+              F_P = 0
+              for ind, val in enumerate(labels):
+                if val > 0.5:
+                  P_ind.append(ind)
+                else:
+                  F_ind.append(ind)
+              for Pi in P_ind:
+                for Fi in F_ind:
+                  if pred_prob[Pi] > pred_prob[Fi]:
+                    P_F += 1
+                  else:
+                    F_P += 1
+              auc = P_F/(len(P_ind)*len(F_ind))
+
               fo = open("Compare_data/Enhancer-LSTMAtt-master/"+cell+"_"+fi+".txt", "w")
-              print(sn_sp_acc_mcc_f1)#sn,sp,acc,mcc,f1,tp,tn,fp,fn
-              fo.write(str(sn_sp_acc_mcc_f11)+'\n')
+              print(sn_sp_acc_mcc_f11,auc)#sn,sp,acc,mcc,f1,tp,tn,fp,fn
+              fo.write(str(sn_sp_acc_mcc_f11)+str(auc)+'\n')
               fo.close()
-
-
-#%%
